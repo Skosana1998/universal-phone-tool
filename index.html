@@ -1,331 +1,612 @@
-
+l
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101014">
+<meta name="theme-color" content="#0b0c10">
+<meta name="description" content="Universal Phone Tool — mobile-first Android diagnostics, repair guides and technician service management.">
 <title>Universal Phone Tool | Technician Hub</title>
-<meta name="description" content="Phone repair technician hub for Android device identification, diagnostics, supported repair guides and service jobs.">
 <style>
 :root {
-  --bg:#101014; --panel:#19191f; --line:#303039;
-  --text:#f6f6f8; --muted:#a4a4b2; --red:#ef4444;
-  --green:#4ade80;
+  --bg:#0b0c10;
+  --panel:#14161d;
+  --panel2:#1c1f28;
+  --line:#303440;
+  --text:#f5f6fa;
+  --muted:#a5a9b7;
+  --red:#ff394b;
+  --green:#4dd4a0;
+  --gold:#f3bd57;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-  font:15px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-header{border-bottom:1px solid var(--line);padding:16px 5%;
-  display:flex;align-items:center;justify-content:space-between;gap:12px}
-.logo{font-size:19px;font-weight:850;letter-spacing:-.7px}
-.logo span{color:var(--red)}
-.status{font-size:12px;color:var(--green)}
-.wrap{width:min(1120px,92%);margin:32px auto 60px}
-.hero{padding:30px 0}
-.eyebrow{color:var(--red);font-weight:800;font-size:12px;
-  letter-spacing:2px;text-transform:uppercase}
-h1{font-size:clamp(32px,6vw,54px);line-height:1.08;
-  letter-spacing:-2px;margin:12px 0}
-h2{font-size:20px;margin:0 0 12px}
-p{color:var(--muted);margin:8px 0}
-.panel{background:var(--panel);border:1px solid var(--line);
-  border-radius:16px;padding:20px}
-.search{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-input,select,textarea{width:100%;background:#101014;color:var(--text);
-  border:1px solid var(--line);border-radius:10px;padding:13px}
-.search input{flex:1;min-width:180px}
-button,.btn{border:0;border-radius:10px;background:var(--red);
-  color:white;padding:12px 16px;font-weight:750;text-decoration:none}
-button.secondary,.btn.secondary{background:#292930;border:1px solid var(--line)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:14px;margin:16px 0 30px}
-.card{background:var(--panel);border:1px solid var(--line);
-  border-radius:14px;padding:18px}
-.card .symbol{font-size:25px}
-.card h3{margin:9px 0 4px;font-size:17px}
-.card p{font-size:13px;min-height:42px}
-.card button{margin-top:12px;width:100%}
-.section-head{display:flex;justify-content:space-between;
-  align-items:center;gap:12px;margin-top:32px}
-.section-head p{font-size:13px}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-.chip{background:#24242b;color:#ddd;border:1px solid var(--line);
-  padding:8px 12px;border-radius:999px;font-size:13px}
-.chip.active{background:#4a2024;border-color:var(--red);color:#fff}
-.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.result{border:1px solid var(--line);border-radius:12px;padding:16px}
-.result h3{margin:0 0 4px}
-.tag{font-size:11px;color:#fca5a5;text-transform:uppercase;
-  letter-spacing:1px;font-weight:800}
-.empty{padding:20px;color:var(--muted)}
-form{display:grid;gap:12px}
-label{font-size:13px;color:#d5d5df;display:grid;gap:6px}
-.notice{border-left:3px solid var(--red);padding:12px 15px;
-  background:#211719;border-radius:5px;color:#ddd;font-size:13px}
-footer{border-top:1px solid var(--line);padding:25px 5%;
-  text-align:center;color:var(--muted);font-size:12px}
-#message{color:var(--green);font-size:13px;min-height:22px}
-@media(max-width:760px){
- .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .results{grid-template-columns:1fr}
- header{padding:14px 4%}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Arial,sans-serif;
+  line-height:1.55;
 }
-@media(max-width:430px){
- .grid{grid-template-columns:1fr}
- .wrap{margin-top:18px}
- .panel{padding:15px}
+button,input,select,textarea { font:inherit; }
+button { cursor:pointer; }
+a { color:#ff6977; }
+.topbar {
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:14px 16px;
+  background:#0b0c10ed;
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+.logo { font-size:19px; font-weight:900; letter-spacing:-.5px; }
+.logo span { color:var(--red); }
+.pill {
+  font-size:11px; padding:5px 9px; border-radius:99px;
+  border:1px solid #484c58; color:var(--muted);
+}
+main { width:min(1100px,100%); margin:auto; padding:18px 14px 90px; }
+.hero {
+  padding:25px 20px; border:1px solid #3a2830;
+  border-radius:20px;
+  background:radial-gradient(ellipse at top right,#4a1721 0%,#17131a 43%,#14161d 100%);
+}
+.eyebrow { color:#ff8c97; font-size:11px; font-weight:800; letter-spacing:2px; }
+h1 { font-size:clamp(30px,8vw,48px); line-height:1.08; margin:10px 0; letter-spacing:-1.5px; }
+h1 span { color:var(--red); }
+p { color:var(--muted); }
+.hero p { max-width:620px; }
+.actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:18px; }
+.btn {
+  border:1px solid var(--line); border-radius:10px;
+  padding:11px 14px; color:var(--text); background:var(--panel2);
+  text-decoration:none; display:inline-flex; justify-content:center; align-items:center;
+}
+.btn.primary { background:var(--red); border-color:var(--red); color:white; font-weight:800; }
+.btn.full { width:100%; }
+.btn:active { transform:scale(.99); }
+.stats {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px; margin:15px 0 25px;
+}
+.stat { padding:13px 10px; border:1px solid var(--line); border-radius:13px; background:var(--panel); }
+.stat strong { display:block; font-size:19px; }
+.stat small { color:var(--muted); font-size:11px; }
+.section { margin-top:29px; scroll-margin-top:82px; }
+.section-head { margin-bottom:13px; }
+.section-head h2 { margin:0; font-size:22px; }
+.section-head p { margin:4px 0 0; font-size:13px; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px; }
+.card { min-width:0; padding:15px; border:1px solid var(--line); border-radius:15px; background:var(--panel); }
+.card h3 { margin:8px 0 5px; font-size:16px; }
+.card p { margin:0; font-size:13px; }
+.card-icon { font-size:24px; }
+.field { display:block; margin:12px 0; }
+.field span { display:block; margin-bottom:6px; font-size:13px; color:#d9dbe3; font-weight:650; }
+input,select,textarea {
+  width:100%; min-width:0; padding:12px;
+  color:var(--text); background:#0d0f14;
+  border:1px solid #383c49; border-radius:9px;
+}
+textarea { min-height:90px; resize:vertical; }
+input:focus,select:focus,textarea:focus { outline:2px solid #ff394b88; border-color:var(--red); }
+label.check { display:flex; gap:10px; align-items:flex-start; margin:12px 0; color:#dedfe7; font-size:13px; }
+label.check input { width:18px; height:18px; flex-shrink:0; margin-top:2px; accent-color:var(--red); }
+.result { margin-top:12px; padding:13px; border:1px solid var(--line); border-radius:10px; background:#0e1016; white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; }
+.muted { color:var(--muted); }
+.good { color:var(--green); }
+.warning { color:var(--gold); }
+.danger { color:#ff7a86; }
+.chips { display:flex; flex-wrap:wrap; gap:7px; margin:12px 0; }
+.chip { padding:7px 10px; background:var(--panel2); border:1px solid var(--line); border-radius:99px; color:var(--text); font-size:12px; }
+.chip.active { border-color:var(--red); background:#401820; }
+.device { margin-top:9px; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--panel); }
+.device strong { display:block; }
+.device small { color:var(--muted); }
+details { padding:12px 0; border-bottom:1px solid var(--line); }
+summary { cursor:pointer; font-weight:700; }
+details p,details li { font-size:13px; }
+.record { padding:12px; margin-top:9px; background:var(--panel2); border:1px solid var(--line); border-radius:10px; overflow-wrap:anywhere; }
+.bottomnav {
+  position:fixed; z-index:6; bottom:0; left:0; right:0;
+  display:flex; justify-content:space-around; gap:3px;
+  padding:9px 5px calc(9px + env(safe-area-inset-bottom));
+  background:#111219f5; border-top:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+.bottomnav a { color:#c7c9d3; text-decoration:none; text-align:center; font-size:10px; flex:1; }
+.bottomnav a span { display:block; font-size:18px; }
+footer { margin-top:35px; padding:20px 0; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+@media(min-width:700px) {
+  main { padding:28px 24px 100px; }
+  .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .hero { padding:38px; }
+}
+@media(max-width:360px) {
+  .grid { grid-template-columns:1fr; }
+  .pill { display:none; }
 }
 </style>
 </head>
 <body>
-<header>
+<header class="topbar">
   <div class="logo">UNIVERSAL <span>PHONE TOOL</span></div>
-  <div class="status">● TECHNICIAN HUB · MVP</div>
+  <span class="pill">TECHNICIAN HUB · V1</span>
 </header>
 
-<main class="wrap">
+<main>
   <section class="hero">
-    <div class="eyebrow">Your repair workspace</div>
-    <h1>Diagnose smarter.<br>Repair with confidence.</h1>
-    <p>Device lookup, supported repair guides and a simple service-job intake for phone technicians.</p>
-    <div class="search">
-      <input id="search" aria-label="Search devices" placeholder="Search model, e.g. Redmi Note 13">
-      <button id="searchBtn">Find device</button>
+    <div class="eyebrow">ANDROID SERVICE PLATFORM</div>
+    <h1>One hub.<br><span>More repair</span> possibilities.</h1>
+    <p>Prepare service sessions, identify supported models, follow repair procedures and manage your technician records from your phone.</p>
+    <div class="actions">
+      <a class="btn primary" href="#connection">＋ New service session</a>
+      <a class="btn" href="#devices">Find a device</a>
     </div>
   </section>
 
-  <section class="grid" aria-label="Platform features">
-    <article class="card">
-      <div class="symbol">📱</div><h3>Device lookup</h3>
-      <p>Search the starter database by brand or model.</p>
-      <button class="secondary" onclick="document.querySelector('#deviceSection').scrollIntoView({behavior:'smooth'})">Browse devices</button>
-    </article>
-    <article class="card">
-      <div class="symbol">🛠️</div><h3>Repair guides</h3>
-      <p>Start with safe diagnostics and supported recovery.</p>
-      <button class="secondary" onclick="document.querySelector('#guides').scrollIntoView({behavior:'smooth'})">View guides</button>
-    </article>
-    <article class="card">
-      <div class="symbol">📋</div><h3>New service job</h3>
-      <p>Prepare a local job note for your repair bench.</p>
-      <button class="secondary" onclick="document.querySelector('#jobSection').scrollIntoView({behavior:'smooth'})">Create job note</button>
-    </article>
-  </section>
+  <div class="stats">
+    <div class="stat"><strong id="device-count">0</strong><small>Reference models</small></div>
+    <div class="stat"><strong>Android</strong><small>Platform focus</small></div>
+    <div class="stat"><strong id="job-count">0</strong><small>Saved local records</small></div>
+  </div>
 
-  <section id="deviceSection">
+  <section class="section" id="tools">
     <div class="section-head">
-      <div><h2>Device explorer</h2><p>Starter examples — not a complete compatibility list.</p></div>
+      <h2>Technician tools</h2>
+      <p>Start with the tools available in this website.</p>
     </div>
-    <div class="chips" id="filters">
-      <button class="chip active" data-brand="All">All brands</button>
-      <button class="chip" data-brand="Samsung">Samsung</button>
-      <button class="chip" data-brand="Xiaomi">Xiaomi</button>
-      <button class="chip" data-brand="Tecno">Tecno</button>
-      <button class="chip" data-brand="Infinix">Infinix</button>
-      <button class="chip" data-brand="itel">itel</button>
-    </div>
-    <div id="devices" class="results"></div>
-  </section>
-
-  <section id="guides">
-    <div class="section-head"><h2>Repair guide library</h2></div>
     <div class="grid">
-      <article class="card">
-        <div class="symbol">🔋</div><h3>Power and charging</h3>
-        <p>Inspect the cable, charger, port, visible damage and battery symptoms.</p>
-        <button onclick="showGuide('power')">Open checklist</button>
-      </article>
-      <article class="card">
-        <div class="symbol">💻</div><h3>Software recovery</h3>
-        <p>Prepare for supported updates, backups and manufacturer recovery tools.</p>
-        <button onclick="showGuide('software')">Open checklist</button>
-      </article>
-      <article class="card">
-        <div class="symbol">🔐</div><h3>Phone lock support</h3>
-        <p>Identify the lock type and use the relevant authorized recovery process.</p>
-        <button onclick="showGuide('locks')">Open checklist</button>
-      </article>
-    </div>
-    <div id="guideDetail" class="panel" hidden aria-live="polite"></div>
-  </section>
-
-  <section id="jobSection">
-    <div class="section-head"><h2>New service job</h2></div>
-    <div class="panel">
-      <p>This first version creates a note in your browser only. It does not send or save it to a server.</p>
-      <form id="jobForm">
-        <label>Device brand and model
-          <input id="jobModel" required maxlength="100" placeholder="e.g. Samsung Galaxy A15">
-        </label>
-        <label>Reported problem
-          <select id="problem">
-            <option>Won't power on</option>
-            <option>Charging issue</option>
-            <option>Screen or touch issue</option>
-            <option>Software recovery</option>
-            <option>Account or device lock</option>
-            <option>Other fault</option>
-          </select>
-        </label>
-        <label>Technician notes
-          <textarea id="notes" rows="3" maxlength="1000" placeholder="Symptoms and checks already performed"></textarea>
-        </label>
-        <div class="notice">Do not enter customer passwords, PINs, IMEI numbers or other sensitive information into this demo.</div>
-        <button type="submit">Prepare job note</button>
-      </form>
-      <p id="message" aria-live="polite"></p>
-      <button id="copyJob" class="secondary" hidden>Copy job note</button>
+      <a class="card" href="#devices" style="text-decoration:none;color:inherit">
+        <div class="card-icon">📱</div><h3>Device lookup</h3>
+        <p>Search the reference model list.</p>
+      </a>
+      <a class="card" href="#connection" style="text-decoration:none;color:inherit">
+        <div class="card-icon">🔌</div><h3>USB preparation</h3>
+        <p>Prepare a USB-C service checklist.</p>
+      </a>
+      <a class="card" href="#repair" style="text-decoration:none;color:inherit">
+        <div class="card-icon">🛠️</div><h3>Repair guides</h3>
+        <p>Follow basic diagnostic procedures.</p>
+      </a>
+      <a class="card" href="#apps" style="text-decoration:none;color:inherit">
+        <div class="card-icon">🧩</div><h3>App management</h3>
+        <p>Review safe app-removal options.</p>
+      </a>
+      <a class="card" href="#locks" style="text-decoration:none;color:inherit">
+        <div class="card-icon">🔐</div><h3>Lock diagnostics</h3>
+        <p>Identify lock types and authorized release routes.</p>
+      </a>
+      <a class="card" href="#records" style="text-decoration:none;color:inherit">
+        <div class="card-icon">📋</div><h3>Service records</h3>
+        <p>Keep basic job notes on this browser.</p>
+      </a>
     </div>
   </section>
 
-  <section style="margin-top:28px" class="notice">
-    <strong>Important:</strong> This MVP is an information and workflow website.
-    It does not connect to phones, flash firmware or unlock devices. Financing
-    locks, FRP and other security controls must be handled through authorized
-    recovery or release procedures.
+  <section class="section" id="devices">
+    <div class="section-head">
+      <h2>Device database</h2>
+      <p>This starter list is for model search, not proof that every servicing function is supported.</p>
+    </div>
+    <label class="field">
+      <span>Search brand or model</span>
+      <input id="device-search" placeholder="e.g. Galaxy A05, Redmi Note 13" autocomplete="off">
+    </label>
+    <div class="chips" id="brand-filters"></div>
+    <div id="device-results" aria-live="polite"></div>
   </section>
+
+  <section class="section" id="connection">
+    <div class="section-head">
+      <h2>USB service preparation</h2>
+      <p>A preparation checklist only. This website does not currently communicate with or modify a connected phone.</p>
+    </div>
+    <div class="card">
+      <label class="field"><span>Customer phone brand</span>
+        <select id="service-brand">
+          <option>Samsung</option><option>Xiaomi</option><option>Redmi</option>
+          <option>POCO</option><option>Tecno</option><option>Infinix</option>
+          <option>itel</option><option>Other Android</option>
+        </select>
+      </label>
+      <label class="field"><span>Exact model</span>
+        <input id="service-model" placeholder="e.g. Samsung Galaxy A06">
+      </label>
+      <label class="field"><span>Connection</span>
+        <select id="service-connection">
+          <option value="USB-C to USB-C">USB-C to USB-C cable</option>
+          <option value="USB-A with compatible adapter">USB-A with compatible adapter</option>
+          <option value="Wireless">Wireless</option>
+          <option value="Not connected">Not connected yet</option>
+        </select>
+      </label>
+      <label class="field"><span>Requested service</span>
+        <select id="service-type">
+          <option>Diagnostics</option><option>Charging or power issue</option>
+          <option>Software recovery</option><option>Factory reset with owner consent</option>
+          <option>Ordinary app management</option><option>Company management release</option>
+          <option>Financing lock release enquiry</option><option>Data transfer</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" class="service-check"> Customer has authorized this service.</label>
+      <label class="check"><input type="checkbox" class="service-check"> Important customer data has been backed up where possible.</label>
+      <label class="check"><input type="checkbox" class="service-check"> Cable supports data transfer, not just charging.</label>
+      <label class="check"><input type="checkbox" class="service-check"> Exact model and requested service have been confirmed.</label>
+      <button class="btn primary full" id="prepare-service">Prepare session</button>
+      <div class="result" id="connection-result" role="status">No session prepared yet.</div>
+    </div>
+  </section>
+
+  <section class="section" id="repair">
+    <div class="section-head">
+      <h2>Repair guides</h2>
+      <p>Start with basic checks before attempting more invasive repairs.</p>
+    </div>
+    <div class="card">
+      <details>
+        <summary>Phone will not charge or power on</summary>
+        <ol>
+          <li>Inspect the cable, charger and connector for visible damage.</li>
+          <li>Try a known-good compatible charger and data cable.</li>
+          <li>Check for overheating, moisture or battery swelling. Stop if unsafe.</li>
+          <li>Follow the exact model's official troubleshooting procedure.</li>
+          <li>Record symptoms before considering hardware repair.</li>
+        </ol>
+      </details>
+      <details>
+        <summary>Phone is stuck on the boot logo</summary>
+        <ol>
+          <li>Record the exact model and symptoms.</li>
+          <li>Try the manufacturer's recommended restart procedure.</li>
+          <li>Check official recovery options for that model.</li>
+          <li>Back up data if the device can still be accessed.</li>
+          <li>Factory reset or firmware reinstallation may erase data. Confirm consent first.</li>
+        </ol>
+      </details>
+      <details>
+        <summary>Phone is slow or an app crashes</summary>
+        <ol>
+          <li>Check available storage and restart the phone.</li>
+          <li>Update apps and Android using official update channels.</li>
+          <li>Review recently installed apps and permissions.</li>
+          <li>Clear an app's cache through Android settings if appropriate.</li>
+          <li>Back up data before any reset.</li>
+        </ol>
+      </details>
+      <details>
+        <summary>Data transfer between two phones</summary>
+        <ol>
+          <li>Check both phones' battery levels and USB capabilities.</li>
+          <li>Use the manufacturer's transfer tool where available.</li>
+          <li>Connect with a data-capable cable and follow on-screen prompts.</li>
+          <li>Approve the connection on both devices as requested.</li>
+          <li>Verify copied files before erasing or resetting the old phone.</li>
+        </ol>
+      </details>
+    </div>
+  </section>
+
+  <section class="section" id="apps">
+    <div class="section-head">
+      <h2>App management</h2>
+      <p>Choose the right route for the type of app.</p>
+    </div>
+    <div class="card">
+      <label class="field"><span>What type of app is it?</span>
+        <select id="app-kind">
+          <option value="ordinary">Ordinary user-installed app</option>
+          <option value="system">Pre-installed system app</option>
+          <option value="admin">Device administrator or company-managed app</option>
+          <option value="finance">Financing or installment-lock app</option>
+          <option value="security">Anti-theft or security app</option>
+        </select>
+      </label>
+      <button class="btn primary full" id="app-guide">Show management guidance</button>
+      <div class="result" id="app-result" aria-live="polite">Select an app type to view guidance.</div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <h3>Ordinary app removal</h3>
+      <p>On the customer's phone, open Settings → Apps → select the app → Uninstall, when that option is available. Some pre-installed apps can only be disabled. Do not remove system components blindly.</p>
+    </div>
+  </section>
+
+  <section class="section" id="locks">
+    <div class="section-head">
+      <h2>Blocked-phone diagnostics</h2>
+      <p>Identify the lock before choosing a repair or release process.</p>
+    </div>
+    <div class="card">
+      <label class="field"><span>What does the phone show?</span>
+        <select id="lock-kind">
+          <option value="screen">Screen PIN, password or pattern</option>
+          <option value="frp">Google account verification after reset (FRP)</option>
+          <option value="finance">PayJoy or installment payment lock</option>
+          <option value="company">Company management or MDM lock</option>
+          <option value="network">SIM or network lock</option>
+          <option value="unknown">Unknown lock or error</option>
+        </select>
+      </label>
+      <button class="btn primary full" id="lock-guide">Identify next steps</button>
+      <div class="result" id="lock-result" aria-live="polite">Choose the message displayed on the device.</div>
+    </div>
+  </section>
+
+  <section class="section" id="records">
+    <div class="section-head">
+      <h2>Technician service records</h2>
+      <p>Records are saved only in this browser on this device. They are not uploaded to a server.</p>
+    </div>
+    <div class="card">
+      <label class="field"><span>Job reference (avoid personal secrets)</span>
+        <input id="job-ref" placeholder="e.g. JOB-001">
+      </label>
+      <label class="field"><span>Model and reported fault</span>
+        <textarea id="job-notes" placeholder="Model, symptoms, tests performed and outcome"></textarea>
+      </label>
+      <button class="btn primary full" id="save-job">Save service record on this device</button>
+      <button class="btn full" id="export-jobs" style="margin-top:8px">Export records as JSON</button>
+      <button class="btn full" id="clear-jobs" style="margin-top:8px">Delete all local records</button>
+      <div id="job-results" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="section-head"><h2>About UPT</h2></div>
+    <div class="card">
+      <p><strong>Current build:</strong> mobile-first website prototype.</p>
+      <p>This version can search its sample device list, display guidance, prepare a service checklist and store basic records in browser storage.</p>
+      <p>It does not yet detect connected USB phones, flash firmware, remove system apps, execute a factory reset or unlock a device.</p>
+      <p>Those capabilities need a separately developed and tested Android application, appropriate device interfaces, permissions and supported procedures. Some operations also require the device owner's account or an authorized release.</p>
+      <p>Never enter customer PINs, passwords, recovery codes or full payment details into UPT.</p>
+    </div>
+  </section>
+
+  <footer>
+    UNIVERSAL PHONE TOOL · UPT<br>
+    Independent technician platform prototype. Brand names belong to their respective owners.
+  </footer>
 </main>
 
-<footer>UNIVERSAL PHONE TOOL · EARLY ACCESS MVP · Built for phone technicians</footer>
+<nav class="bottomnav" aria-label="Main navigation">
+  <a href="#tools"><span>⌂</span>Tools</a>
+  <a href="#devices"><span>▦</span>Devices</a>
+  <a href="#connection"><span>⇄</span>USB setup</a>
+  <a href="#locks"><span>♙</span>Locks</a>
+  <a href="#records"><span>☷</span>Records</a>
+</nav>
 
 <script>
+(function () {
+"use strict";
+
 const devices = [
- {brand:"Samsung",model:"Galaxy A15",type:"Android smartphone"},
- {brand:"Samsung",model:"Galaxy A25",type:"Android smartphone"},
- {brand:"Samsung",model:"Galaxy S23",type:"Android smartphone"},
- {brand:"Xiaomi",model:"Redmi Note 13",type:"Android smartphone"},
- {brand:"Xiaomi",model:"Redmi 12",type:"Android smartphone"},
- {brand:"Xiaomi",model:"POCO X6",type:"Android smartphone"},
- {brand:"Tecno",model:"Spark 20",type:"Android smartphone"},
- {brand:"Tecno",model:"Camon 30",type:"Android smartphone"},
- {brand:"Infinix",model:"Hot 40",type:"Android smartphone"},
- {brand:"Infinix",model:"Note 40",type:"Android smartphone"},
- {brand:"itel",model:"A70",type:"Android smartphone"},
- {brand:"itel",model:"P55",type:"Android smartphone"}
+  ["Samsung","Galaxy A05","Reference entry"],
+  ["Samsung","Galaxy A06","Reference entry"],
+  ["Samsung","Galaxy A15","Reference entry"],
+  ["Samsung","Galaxy A16","Reference entry"],
+  ["Samsung","Galaxy A25","Reference entry"],
+  ["Samsung","Galaxy A35","Reference entry"],
+  ["Samsung","Galaxy A55","Reference entry"],
+  ["Samsung","Galaxy S23","Reference entry"],
+  ["Samsung","Galaxy S24","Reference entry"],
+  ["Samsung","Galaxy S25","Reference entry"],
+  ["Samsung","Galaxy Z Flip","Reference entry"],
+  ["Xiaomi","Redmi Note 13","Reference entry"],
+  ["Xiaomi","Redmi Note 14","Reference entry"],
+  ["Xiaomi","Redmi 12","Reference entry"],
+  ["Redmi","Redmi Note 13","Reference entry"],
+  ["POCO","POCO X6","Reference entry"],
+  ["POCO","POCO X7","Reference entry"],
+  ["Tecno","Spark 20","Reference entry"],
+  ["Tecno","Spark 30","Reference entry"],
+  ["Tecno","Camon 30","Reference entry"],
+  ["Infinix","Hot 40","Reference entry"],
+  ["Infinix","Note 40","Reference entry"],
+  ["Infinix","Hot 50","Reference entry"],
+  ["itel","A70","Reference entry"],
+  ["itel","P55","Reference entry"]
 ];
 
+const $ = id => document.getElementById(id);
 let activeBrand = "All";
-const devicesEl = document.getElementById("devices");
-const searchEl = document.getElementById("search");
 
-function renderDevices(){
- const q = searchEl.value.trim().toLowerCase();
- const found = devices.filter(d =>
-   (activeBrand === "All" || d.brand === activeBrand) &&
-   (d.brand + " " + d.model).toLowerCase().includes(q)
- );
- devicesEl.replaceChildren();
- if(!found.length){
-   const empty = document.createElement("div");
-   empty.className = "empty";
-   empty.textContent = "No match in this starter database. Check the model name or expand the database.";
-   devicesEl.append(empty);
-   return;
- }
- found.forEach(d => {
-   const card = document.createElement("article");
-   card.className = "result";
-   const tag = document.createElement("div");
-   tag.className = "tag";
-   tag.textContent = d.brand;
-   const title = document.createElement("h3");
-   title.textContent = d.model;
-   const desc = document.createElement("p");
-   desc.textContent = d.type + " · Exact variant and firmware not yet verified.";
-   const btn = document.createElement("button");
-   btn.className = "secondary";
-   btn.textContent = "Use in job";
-   btn.addEventListener("click", () => {
-     document.getElementById("jobModel").value = d.brand + " " + d.model;
-     document.getElementById("jobSection").scrollIntoView({behavior:"smooth"});
-   });
-   card.append(tag,title,desc,btn);
-   devicesEl.append(card);
- });
+function safeText(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  }[ch]));
 }
 
-document.getElementById("searchBtn").addEventListener("click", renderDevices);
-searchEl.addEventListener("input", renderDevices);
-searchEl.addEventListener("keydown", e => {
- if(e.key === "Enter") renderDevices();
-});
-document.querySelectorAll("[data-brand]").forEach(btn => {
- btn.addEventListener("click", () => {
-   activeBrand = btn.dataset.brand;
-   document.querySelectorAll("[data-brand]").forEach(b =>
-     b.classList.toggle("active", b === btn));
-   renderDevices();
- });
-});
+function renderDevices() {
+  const query = $("device-search").value.trim().toLowerCase();
+  const matches = devices.filter(d =>
+    (activeBrand === "All" || d[0] === activeBrand) &&
+    (d[0] + " " + d[1]).toLowerCase().includes(query)
+  );
 
-const guides = {
- power: ["Power and charging checklist", [
-   "Test with a known-good, compatible cable and charger.",
-   "Inspect the port for visible damage or debris; do not insert metal tools.",
-   "Check for heat, liquid exposure or a swollen battery. Stop if unsafe.",
-   "Record symptoms and consult the model-specific service documentation."
- ]],
- software: ["Software recovery checklist", [
-   "Identify the exact model and regional variant.",
-   "Ask the owner to back up data where possible.",
-   "Use the manufacturer's official update or recovery utility.",
-   "Verify firmware compatibility before any reset or flash; data may be lost."
- ]],
- locks: ["Phone lock support checklist", [
-   "Identify whether the issue is a screen PIN, Google account verification, financing lock or enterprise management.",
-   "Verify ownership or the customer's authorization to service the device.",
-   "For financing locks, contact the finance provider to confirm the release process.",
-   "For account locks, use the official account recovery process. Never ask the customer to disclose their password."
- ]]
-};
-function showGuide(id){
- const panel = document.getElementById("guideDetail");
- const [title,items] = guides[id];
- panel.replaceChildren();
- const h = document.createElement("h2"); h.textContent = title;
- const list = document.createElement("ol");
- items.forEach(item => {
-   const li = document.createElement("li"); li.textContent = item; list.append(li);
- });
- const close = document.createElement("button");
- close.className = "secondary"; close.textContent = "Close guide";
- close.addEventListener("click", () => panel.hidden = true);
- panel.append(h,list,close);
- panel.hidden = false;
- panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+  $("device-count").textContent = devices.length;
+  $("device-results").innerHTML = matches.length
+    ? matches.map(d => `
+      <div class="device">
+        <strong>${safeText(d[0])} ${safeText(d[1])}</strong>
+        <small>${safeText(d[2])} · Exact model capabilities not verified</small>
+      </div>`).join("")
+    : '<div class="result">No matching reference model. Try another search.</div>';
 }
 
-let jobText = "";
-document.getElementById("jobForm").addEventListener("submit", e => {
- e.preventDefault();
- jobText = [
-   "UNIVERSAL PHONE TOOL — SERVICE NOTE",
-   "Device: " + document.getElementById("jobModel").value.trim(),
-   "Problem: " + document.getElementById("problem").value,
-   "Notes: " + document.getElementById("notes").value.trim(),
-   "Status: Awaiting technician inspection"
- ].join("\n");
- document.getElementById("message").textContent =
-   "Job note prepared in this page. It has not been saved to a server.";
- document.getElementById("copyJob").hidden = false;
-});
-document.getElementById("copyJob").addEventListener("click", async () => {
- try {
-   await navigator.clipboard.writeText(jobText);
-   document.getElementById("message").textContent = "Job note copied.";
- } catch {
-   const area = document.createElement("textarea");
-   area.value = jobText;
-   document.querySelector("#jobSection .panel").append(area);
-   area.focus(); area.select();
-   document.getElementById("message").textContent =
-     "Select and copy the note from the text box.";
- }
-});
+function renderFilters() {
+  const brands = ["All", ...new Set(devices.map(d => d[0]))];
+  $("brand-filters").innerHTML = brands.map(brand =>
+    `<button class="chip ${brand === activeBrand ? "active" : ""}" data-brand="${safeText(brand)}">${safeText(brand)}</button>`
+  ).join("");
+
+  $("brand-filters").querySelectorAll("button").forEach(button => {
+    button.addEventListener("click", () => {
+      activeBrand = button.dataset.brand;
+      renderFilters();
+      renderDevices();
+    });
+  });
+}
+
+$("device-search").addEventListener("input", renderDevices);
+renderFilters();
 renderDevices();
+
+$("prepare-service").addEventListener("click", () => {
+  const model = $("service-model").value.trim();
+  const checks = Array.from(document.querySelectorAll(".service-check"));
+
+  if (!model) {
+    $("connection-result").textContent = "Enter the exact phone model first.";
+    return;
+  }
+  if (!checks.every(c => c.checked)) {
+    $("connection-result").textContent =
+      "Complete all four checks before preparing the service session.";
+    return;
+  }
+
+  const summary = [
+    "SERVICE SESSION PREPARED",
+    "Brand: " + $("service-brand").value,
+    "Model: " + model,
+    "Connection: " + $("service-connection").value,
+    "Requested service: " + $("service-type").value,
+    "",
+    "Status: Preparation only. UPT has not detected or changed the phone.",
+    "Next: Confirm that the exact model and service method are supported."
+  ].join("\n");
+
+  $("connection-result").textContent = summary;
+});
+
+const appGuides = {
+  ordinary:
+    "Use Android Settings → Apps → select the app → Uninstall, if offered. Review the app name and back up relevant data first.",
+  system:
+    "Some pre-installed apps cannot be uninstalled normally. Check the manufacturer's guidance. Disabling may be available. Removing system components can break the phone.",
+  admin:
+    "Check whether the device belongs to an organization. Ask its authorized administrator to release management or approve removal. Do not defeat company security controls.",
+  finance:
+    "Confirm the financing agreement and payment status with the provider. Request an official unlock or release. UPT cannot legitimately cancel a finance lock on the provider's behalf.",
+  security:
+    "Identify the security product and verify ownership. Use its official account recovery or vendor-supported removal process. Do not disable anti-theft protections to access someone else's device."
+};
+
+$("app-guide").addEventListener("click", () => {
+  $("app-result").textContent = appGuides[$("app-kind").value];
+});
+
+const lockGuides = {
+  screen:
+    "Confirm ownership first. Try the owner's known credential or the manufacturer's official account recovery options. A factory reset can erase data and may still trigger account verification.",
+  frp:
+    "This is Google Factory Reset Protection. The owner should sign in with a previously synced Google account or follow Google's official account recovery procedure. A reset does not necessarily remove this protection.",
+  finance:
+    "Contact the finance-lock provider, such as PayJoy where applicable. Confirm payment status and request an official release. A cable or factory reset does not guarantee removal.",
+  company:
+    "Contact the organization or device administrator and request an authorized unenrollment. A managed device may automatically re-enroll after a reset.",
+  network:
+    "Ask the original carrier or network provider about eligibility and the official SIM-unlock procedure. Network unlocking differs from screen unlocking.",
+  unknown:
+    "Record the exact on-screen message, model and software version. Avoid repeated resets or unknown tools. Use the manufacturer's support channel to identify the lock."
+};
+
+$("lock-guide").addEventListener("click", () => {
+  $("lock-result").textContent = lockGuides[$("lock-kind").value];
+});
+
+const STORAGE_KEY = "upt_local_service_records_v1";
+
+function readJobs() {
+  try {
+    const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function renderJobs() {
+  const jobs = readJobs();
+  $("job-count").textContent = jobs.length;
+
+  $("job-results").innerHTML = jobs.length
+    ? jobs.map((job, index) => `
+      <div class="record">
+        <strong>${safeText(job.ref)}</strong>
+        <p>${safeText(job.notes)}</p>
+        <small class="muted">${safeText(job.date)}</small><br>
+        <button class="btn" data-delete="${index}" style="margin-top:8px">Delete record</button>
+      </div>`).join("")
+    : '<p class="muted">No local service records saved.</p>';
+
+  $("job-results").querySelectorAll("[data-delete]").forEach(button => {
+    button.addEventListener("click", () => {
+      const current = readJobs();
+      current.splice(Number(button.dataset.delete), 1);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+        renderJobs();
+      } catch (e) {
+        $("job-results").textContent = "Could not update local storage.";
+      }
+    });
+  });
+}
+
+$("save-job").addEventListener("click", () => {
+  const ref = $("job-ref").value.trim();
+  const notes = $("job-notes").value.trim();
+
+  if (!ref || !notes) {
+    alert("Enter a job reference and service notes.");
+    return;
+  }
+
+  const jobs = readJobs();
+  jobs.unshift({
+    ref: ref.slice(0, 80),
+    notes: notes.slice(0, 3000),
+    date: new Date().toLocaleString()
+  });
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
+    $("job-ref").value = "";
+    $("job-notes").value = "";
+    renderJobs();
+    alert("Service record saved on this device.");
+  } catch (e) {
+    alert("Unable to save. Browser storage may be unavailable or full.");
+  }
+});
+
+$("export-jobs").addEventListener("click", () => {
+  const data = JSON.stringify(readJobs(), null, 2);
+  const blob = new Blob([data], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "upt-service-records.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+$("clear-jobs").addEventListener("click", () => {
+  if (!confirm("Delete every UPT service record stored in this browser? Export first if you need a copy.")) return;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    renderJobs();
+  } catch (e) {
+    alert("Could not clear local records.");
+  }
+});
+
+renderJobs();
+})();
 </script>
 </body>
 </html>
